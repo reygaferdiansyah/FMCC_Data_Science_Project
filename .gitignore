@@ -1,0 +1,14 @@
+# Virtual Environment
+fmcc/
+venv/
+env/
+
+# Catboost generated files
+catboost_info/
+
+# Python cache files (sampah sistem)
+__pycache__/
+*.pyc
+
+# Mac OS system file (jika ada)
+.DS_Store
