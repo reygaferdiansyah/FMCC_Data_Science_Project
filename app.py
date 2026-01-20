@@ -9,12 +9,11 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # ======================================================
-# 1. PLATINUM DARK CONFIGURATION
+# 1. CONFIGURATION
 # ======================================================
 st.set_page_config(
     page_title="OLIST Intelligence HQ",
     layout="wide",
-    page_icon="💎",
     initial_sidebar_state="expanded"
 )
 
@@ -47,12 +46,12 @@ def load_data():
     try:
         rfm = pd.read_csv("olist_rfm_final_for_engine.csv")
     except:
-        st.error("⚠️ Error: 'olist_rfm_final_for_engine.csv' not found.")
+        st.error("Error: 'olist_rfm_final_for_engine.csv' not found.")
     try:
         forecast = pd.read_csv("olist_weekly_engineered.csv")
         forecast["date"] = pd.to_datetime(forecast["date"])
     except:
-        st.error("⚠️ Error: 'olist_weekly_engineered.csv' not found.")
+        st.error("Error: 'olist_weekly_engineered.csv' not found.")
     return rfm, forecast
 
 @st.cache_resource
@@ -63,7 +62,7 @@ def load_brain():
         sx = joblib.load("scaler_X.joblib")
         sy = joblib.load("scaler_y.joblib")
     except Exception as e:
-        st.warning(f"⚠️ Model AI not ready: {e}")
+        st.warning(f"Model AI not ready: {e}")
     features = ['n_orders', 'month_sin', 'month_cos', 'week_sin', 'week_cos', 
                 'is_black_friday', 'is_december', 'is_peak_season', 
                 'orders_x_bf', 'orders_x_peak']
@@ -109,19 +108,19 @@ def generate_future_input(start_date, baseline_orders, periods):
 # ======================================================
 def analyze_strategy(change_pct):
     if change_pct < 0:
-        strategy = "🚨 REVENUE DROP ALERT"
+        strategy = "REVENUE DROP ALERT"
         risk_level = "HIGH RISK"
         risk_color = "#e74c3c" # Red
         desc = "Decline detected vs last month. Focus on Retention & Win-Back campaigns."
         target_segments = ["At Risk", "Lost", "Hibernating"]
     elif change_pct == 0:
-        strategy = "⚖️ STABLE / INSUFFICIENT DATA"
+        strategy = "STABLE / INSUFFICIENT DATA"
         risk_level = "NEUTRAL"
         risk_color = "#A0AEC0" # Grey
         desc = "Revenue is stagnant or insufficient historical data for comparison."
         target_segments = ["Promising"]
     else:
-        strategy = "📈 GROWTH SIGNAL"
+        strategy = "GROWTH SIGNAL"
         risk_level = "LOW RISK"
         risk_color = "#2ecc71" # Green
         desc = "Positive trend maintained. Opportunity for Upselling & Expansion."
@@ -148,12 +147,12 @@ st.sidebar.caption("System vFinal (Pro English) | Bi-LSTM")
 
 # --- MODULE 0: ABOUT ME (PROFILE) ---
 if menu == "About Me":
-    st.title("👋 About Me")
+    st.title("About Me")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.markdown("### 👨‍💻 Professional Summary")
+        st.markdown("### Professional Summary")
         st.write("""
         **Bachelor of Computer Science graduate** pursuing a **Master’s in Information Technology at BINUS University**, 
         specializing in **Data Science and AI Engineering**. 
@@ -163,7 +162,7 @@ if menu == "About Me":
         Passionate about creating data-driven and AI-powered solutions with real-world impact.
         """)
         
-        st.markdown("### 💼 Work Experience")
+        st.markdown("### Work Experience")
         
         st.markdown("##### **Data Science (Contract)** @ URBANSOLV")
         st.caption("September 2025 – Present")
@@ -183,7 +182,7 @@ if menu == "About Me":
         * Built interactive dashboards using Streamlit, Power BI, and Plotly Dash.
         """)
 
-        st.markdown("### 🎓 Education")
+        st.markdown("### Education")
         st.write("""
         * **Master of Information Technology** - BINUS University (Nov 2024 - Present)
         * **Data Science Bootcamp** - Dibimbing.id (Nov 2024 - June 2025)
@@ -191,7 +190,7 @@ if menu == "About Me":
         """)
 
     with col2:
-        st.markdown("### 🛠️ Technical Skills")
+        st.markdown("### Technical Skills")
         st.success("""
         **Languages & Tools:**
         * Python, SQL
@@ -206,7 +205,7 @@ if menu == "About Me":
         * Geospatial Analysis
         """)
         
-        st.markdown("### 📬 Contact")
+        st.markdown("### Contact")
         st.markdown("""
         - 💼 [LinkedIn](https://www.linkedin.com/in/reyga-ferdiansyah)  
         - 🛠️ [GitHub](https://github.com/reygaferdiansyah)  
@@ -216,7 +215,7 @@ if menu == "About Me":
 
 # --- MODULE 1: MODEL PERFORMANCE ---
 elif menu == "Model Performance":
-    st.title("🤖 Model Performance Audit")
+    st.title("Model Performance Audit")
     st.markdown("Evaluating **Bi-LSTM Model** Accuracy: *Actual vs Predicted* on Historical Data.")
 
     if model and hist_df is not None and FEATURES:
@@ -251,7 +250,7 @@ elif menu == "Model Performance":
             
             st.markdown("---")
             
-            st.subheader("📉 Actual vs Predicted Timeline (Test Data)")
+            st.subheader("Actual vs Predicted Timeline (Test Data)")
             fig_eval = go.Figure()
             fig_eval.add_trace(go.Scatter(x=train_df['date'], y=train_df['revenue'], mode='lines', name='Training Data', line=dict(color='#4A5568', width=1)))
             fig_eval.add_trace(go.Scatter(x=test_df['date'], y=test_df['revenue'], mode='lines', name='Actual Test Data', line=dict(color='#3182CE', width=2)))
@@ -261,12 +260,12 @@ elif menu == "Model Performance":
             
             c_left, c_right = st.columns([1, 1])
             with c_left:
-                st.subheader("🎯 Prediction Correlation")
+                st.subheader("Prediction Correlation")
                 fig_scatter = px.scatter(x=y_test_real, y=y_test_pred, labels={'x': 'Actual Value', 'y': 'Predicted Value'}, template="plotly_dark", title=f"Correlation (R2: {r2:.2f})", color_discrete_sequence=['#00CC96'])
                 fig_scatter.add_shape(type="line", x0=min(y_test_real), y0=min(y_test_real), x1=max(y_test_real), y1=max(y_test_real), line=dict(color="#E74C3C", dash="dash"))
                 st.plotly_chart(fig_scatter, use_container_width=True)
             with c_right:
-                st.subheader("🔍 Error Distribution (Residuals)")
+                st.subheader("Error Distribution (Residuals)")
                 residuals = y_test_real - y_test_pred
                 fig_res = ff.create_distplot([residuals], ['Residuals'], bin_size=(max(residuals)-min(residuals))/20, show_hist=True, show_rug=False, colors=['#3B82F6'])
                 fig_res.update_layout(template="plotly_dark", showlegend=False, height=400, title="Zero = Perfect Prediction")
@@ -276,14 +275,14 @@ elif menu == "Model Performance":
         except Exception as e:
             st.error(f"Error evaluating model: {str(e)}")
     else:
-        st.error("⚠️ Model or data not found.")
+        st.error("Model or data not found.")
 
 # --- MODULE 2: CUSTOMER INSIGHTS ---
 elif menu == "Customer Insights":
     st.title("🧬 Customer Insights & Overview")
     
     if rfm_df is not None:
-        st.subheader("🧬 Customer Segmentation DNA")
+        st.subheader("Customer Segmentation DNA")
         seg_choice = st.selectbox("Select Segment to Analyze:", rfm_df['Segment'].unique())
         subset = rfm_df[rfm_df['Segment'] == seg_choice]
         st.caption(f"Visualizing behavior pattern for **{seg_choice}** segment.")
@@ -297,7 +296,7 @@ elif menu == "Customer Insights":
         fig_dna.update_layout(height=500, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig_dna, use_container_width=True)
         
-        with st.expander(f"📄 View Data Table: {seg_choice} (Top 100)", expanded=False):
+        with st.expander(f"View Data Table: {seg_choice} (Top 100)", expanded=False):
             st.dataframe(subset.head(100), use_container_width=True)
 
         st.markdown("---")
@@ -325,7 +324,7 @@ elif menu == "Customer Insights":
 
 # --- MODULE 3: FUTURE SIGHT (FORECAST) ---
 elif menu == "Future Sight (AI Forecast)":
-    st.title("🔮 AI Revenue Projection")
+    st.title("AI Revenue Projection")
     st.markdown("Interactive: **Chart points follow the Slider Horizon. Click a point to inspect specifics.**")
     
     c1, c2 = st.columns(2)
@@ -446,7 +445,7 @@ elif menu == "Future Sight (AI Forecast)":
         strategy, risk_lvl, risk_col, desc, target_list = analyze_strategy(change_pct)
         date_lbl = selected_date.strftime('%d %b %Y')
 
-        st.markdown(f"### 🎯 Focus: {date_lbl}")
+        st.markdown(f"### Focus: {date_lbl}")
         m1, m2 = st.columns([1, 2])
         with m1: st.metric("Projected Revenue", f"R$ {selected_val:,.0f}", f"{change_pct:.2%} vs {prev_lbl}")
         with m2: st.markdown(f"<div class='metric-card' style='border-left: 5px solid {risk_col};'><h3 style='margin:0; color:{risk_col};'>{strategy}</h3><p style='color:white; margin-top:5px;'>{desc}</p></div>", unsafe_allow_html=True)
